@@ -1,0 +1,20 @@
+{
+  "gcp_project_id": "fde-bootcamp",
+  "location": "us",
+  "app_name": "sofiamejiamuro-[FDE-bootcamp]-telco-agent",
+  "deployed_app_id": "a2630043-2939-46be-93b2-daef4c7fd3e8",
+  "app_dir": "cxas_app/",
+  "model": "gemini-3.5-flash",
+  "modality": "audio",
+  "default_channel": "audio",
+  "environments": {
+    "dev": {
+      "app_id": "a2630043-2939-46be-93b2-daef4c7fd3e8",
+      "description": "Development/sandbox app"
+    },
+    "prod": {
+      "app_id": null,
+      "description": "Production app (not yet configured)"
+    }
+  }
+}
