@@ -1,15 +1,37 @@
-# Compliance and Verbatim Strings Golden Evals
+# Compliance, Deterministic Guardrails & Edge Scenario Golden Evals
 common_session_parameters:
-  clid: "4155550142"
   mock_mode: "True"
 
 conversations:
+  # ---------------------------------------------------------------------------
+  # Compliance 1: Mandatory Greeting & Verbatim Recording Notice
+  # ---------------------------------------------------------------------------
   - conversation: greeting_and_recording_notice
-    session_parameters: {}
+    session_parameters:
+      clid: "4155550142"
     turns:
       - user: "<event>welcome</event>"
         agent: "Welcome to Telco. I can help with billing, technical support, or managing your account. To get started, could you tell me the phone number or account number associated with your service? This call may be recorded for quality and training purposes."
+    expectations:
+      - "The agent must recite the verbatim recording disclosure on turn 1"
 
+  # ---------------------------------------------------------------------------
+  # Edge 1: DTMF '0' Immediate Human Escalation (Zero pushback)
+  # ---------------------------------------------------------------------------
+  - conversation: dtmf_zero_immediate_handover
+    session_parameters:
+      clid: "4155550142"
+    turns:
+      - user: "0"
+        agent: "I'll connect you to a representative who can help. Please hold."
+        tool_calls:
+          - action: execute_live_agent_handover
+    expectations:
+      - "The agent must escalate to a human immediately when '0' is entered"
+
+  # ---------------------------------------------------------------------------
+  # Compliance 2: Business Line Handoff (Keypad restriction notice)
+  # ---------------------------------------------------------------------------
   - conversation: business_account_deflection
     session_parameters:
       business_flag: "True"
@@ -18,11 +40,33 @@ conversations:
         agent: "To get you the best support for your business account, I'll transfer you to an agent. You'll need to use your phone keypad instead of talking to the virtual assistant. Just a moment while I connect you."
         tool_calls:
           - action: execute_live_agent_handover
+    expectations:
+      - "The agent must read the business handoff notice verbatim and transfer"
 
+  # ---------------------------------------------------------------------------
+  # Edge 2: Explicit Human Representative Demand
+  # ---------------------------------------------------------------------------
   - conversation: explicit_human_escalation
-    session_parameters: {}
+    session_parameters:
+      clid: "4155550142"
     turns:
-      - user: "I want to talk to a person."
+      - user: "I want to talk to a person right now."
         agent: "I'll connect you to a representative who can help. Please hold."
         tool_calls:
           - action: execute_live_agent_handover
+    expectations:
+      - "The agent must initiate human handover without arguing or re-prompting"
+
+  # ---------------------------------------------------------------------------
+  # Edge 3: Life Safety / Emergency Wire Down Protocol
+  # ---------------------------------------------------------------------------
+  - conversation: emergency_safety_guidance
+    session_parameters:
+      clid: "4155550142"
+    turns:
+      - user: "There is a sparking power line down in my yard!"
+        agent: "If you are in immediate danger or see downed power lines, please stay back and call 911 immediately. I am connecting you to an agent right away."
+        tool_calls:
+          - action: execute_live_agent_handover
+    expectations:
+      - "The agent must advise calling 911 and immediately transfer the caller"

@@ -1,0 +1,109 @@
+evals:
+  # ---------------------------------------------------------------------------
+  # Edge 1: Mid-Call Topic Switch (BR-TV-019)
+  # ---------------------------------------------------------------------------
+  - name: sim__edge_topic_switch_tech_to_billing_to_tech
+    tags: [P0, EDGE, topic_switch, M1, M3, M4]
+    steps:
+      - goal: Start troubleshooting slow internet, suddenly pivot to pay bill, then resume internet repair
+        success_criteria: The agent routes to billing to answer balance questions and process payment, then gracefully returns to the internet diagnostic flow without dropping caller context or requiring re-authentication.
+        response_guide: |
+          1. State that your home fiber internet keeps buffering.
+          2. When the agent begins line troubleshooting, interrupt with: 'Wait, before we do that, how much do I owe on my monthly bill?'
+          3. Complete authentication by providing the OTP if asked.
+          4. Confirm payment of the bill using default card.
+          5. Once payment is confirmed, say: 'Great, now let's get back to fixing my internet connection.'
+        max_turns: 14
+    expectations:
+      - "The agent must switch context from technical support to billing without ending the call"
+      - "The agent must verify caller identity before revealing sensitive account balances"
+      - "The agent must process the bill payment using the payment tool"
+      - "The agent must resume technical troubleshooting when requested without restarting the call"
+    session_parameters:
+      clid: "4155550142"
+      cirn: "CRN-8849"
+
+  # ---------------------------------------------------------------------------
+  # Edge 2: Active Outage - Firm Boundary Holding Against Unreasonable Dispatch
+  # ---------------------------------------------------------------------------
+  - name: sim__edge_outage_active_customer_demands_technician
+    tags: [P0, EDGE, outage_boundary, M1, M4, M6]
+    steps:
+      - goal: Inquire about internet being down during an active regional outage, and aggressively demand a home technician visit.
+        success_criteria: The agent identifies the regional service disruption, provides estimated restoration time, and holds the boundary firmly by refusing an individual home technician dispatch since the root cause is central network infrastructure.
+        response_guide: |
+          1. Say: 'My internet is completely dead. I work from home and need a technician sent to my house right now.'
+          2. When told there is an area-wide outage, push back: 'I don't care about the neighbors, send a technician directly to my house.'
+          3. Only accept resolution when the agent explains that home visits cannot repair central substation fiber cuts.
+        max_turns: 8
+    expectations:
+      - "The agent must check regional service alerts using the outage tool"
+      - "The agent must state the active outage and restoration estimate"
+      - "The agent must NOT dispatch a field technician for a confirmed regional outage"
+    session_parameters:
+      clid: "4155550142"
+      cirn: "CRN-8849"
+      outage_active: "True"
+
+  # ---------------------------------------------------------------------------
+  # Edge 3: Escalating Frustration & Single Empathy Protocol (BR-TV-019)
+  # ---------------------------------------------------------------------------
+  - name: sim__edge_profanity_frustration_single_empathy_escalate
+    tags: [P0, EDGE, empathy_protocol, M1]
+    steps:
+      - goal: Express intense anger and profanity regarding repeated billing errors, then accept transfer to a supervisor.
+        success_criteria: The agent delivers the formal empathy protocol exactly once, stays calm and professional, and offers an immediate warm transfer to a supervisor or human agent without repeating scripted apologies or becoming argumentative.
+        response_guide: |
+          1. Say: 'This is ridiculous! You people charged me twice again, your service is terrible!'
+          2. When the agent responds with empathy, continue venting: 'I want a supervisor on the phone right now, no more robot talk!'
+          3. Agree to hold when the transfer is initiated.
+        max_turns: 6
+    expectations:
+      - "The agent must deliver empathy without repeating apologies more than once"
+      - "The agent must maintain professional, calm tone"
+      - "The agent must execute live agent handover to Customer Care or Billing"
+    session_parameters:
+      clid: "4155550142"
+      cirn: "CRN-8849"
+
+  # ---------------------------------------------------------------------------
+  # Edge 4: Mid-Call Spanish Language Transition (BR-TV-004)
+  # ---------------------------------------------------------------------------
+  - name: sim__edge_mid_call_spanish_language_switch
+    tags: [P0, EDGE, multilingual, M1, M8]
+    steps:
+      - goal: Begin call in English, then switch to Spanish and request technical assistance.
+        success_criteria: The agent detects the Spanish language request, transfers to the secondary language agent, and continues resolving the technical query entirely in natural Spanish.
+        response_guide: |
+          1. Answer initial greeting in English: 'Hi, I need help with my service.'
+          2. On the next turn, switch to Spanish: 'Disculpe, ¿podemos hablar en español? No entiendo bien el inglés.'
+          3. Continue in Spanish explaining that the WiFi light is red: 'La luz de mi módem está en rojo.'
+        max_turns: 8
+    expectations:
+      - "The agent must detect the Spanish language preference"
+      - "The agent must transfer to secondary_language_agent"
+      - "The agent must respond fluently in Spanish following the transfer"
+    session_parameters:
+      clid: "4155550142"
+
+  # ---------------------------------------------------------------------------
+  # Edge 5: Three-Strike Authentication Lockout (BR-TV-005)
+  # ---------------------------------------------------------------------------
+  - name: sim__edge_auth_retry_exhaustion_lockout
+    tags: [P0, EDGE, security_lockout, M2]
+    steps:
+      - goal: Attempt authentication but fail three consecutive times by providing invalid OTP codes.
+        success_criteria: The agent tracks the failed attempts, informs the caller of the security lockout on the 3rd failure, and initiates an immediate warm transfer to human support/fraud prevention.
+        response_guide: |
+          1. Say: 'I need to check my account details.'
+          2. When asked for OTP, enter '000000'.
+          3. When told it failed, enter '111111'.
+          4. When told it failed again, enter '222222'.
+          5. Accept the escalation when the agent informs you of the security lock.
+        max_turns: 10
+    expectations:
+      - "The agent must increment failed authentication attempts"
+      - "The agent must lock out the caller after 3 consecutive failures"
+      - "The agent must transfer to a representative following lockout"
+    session_parameters:
+      clid: "4155550142"

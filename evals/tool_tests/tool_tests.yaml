@@ -1,20 +1,56 @@
-# Tool Contract Verification Tests
+# Tool Contract & Edge Scenario Verification Suite
+# Validates both successful invocations and defensive error envelopes across all tools.
 tests:
-  - name: fetch_customer_profile_success
+  # ---------------------------------------------------------------------------
+  # Module 1 & Routing Tools
+  # ---------------------------------------------------------------------------
+  - name: fetch_customer_profile_happy_path
     tool: fetch_customer_profile
     args:
       clid: "4155550142"
-    variables:
-      mock_mode: "True"
     expectations:
       response:
         - path: "$.result.status"
           operator: equals
           value: "success"
         - path: "$.result.cirn"
+          operator: equals
+          value: "CRN-8849"
+        - path: "$.result.billing_account"
+          operator: equals
+          value: "BA-4921"
+
+  - name: fetch_customer_profile_restricted_edge
+    tool: fetch_customer_profile
+    args:
+      clid: ""
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "error"
+        - path: "$.result.error"
+          operator: contains
+          value: "Restricted"
+        - path: "$.result.agent_action"
           operator: is_not_null
 
-  - name: check_regional_outage_test
+  - name: evaluate_routing_rules_happy_path
+    tool: evaluate_routing_rules
+    args:
+      utterance: "I want to check my balance and pay my bill"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "success"
+        - path: "$.result.route"
+          operator: is_not_null
+        - path: "$.result.confidence"
+          operator: greater_than
+          value: 0.8
+
+  - name: check_regional_outage_happy_path
     tool: check_regional_outage
     args:
       region: "Region-A"
@@ -27,7 +63,54 @@ tests:
         - path: "$.result.active"
           operator: is_not_null
 
-  - name: fetch_recent_bills_test
+  # ---------------------------------------------------------------------------
+  # Module 2: Authentication & Security Tools
+  # ---------------------------------------------------------------------------
+  - name: send_authentication_otp_happy_path
+    tool: send_authentication_otp
+    args:
+      clid: "4155550142"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "success"
+        - path: "$.result.sent"
+          operator: is_not_null
+        - path: "$.result.expires_in_sec"
+          operator: greater_than
+          value: 60
+
+  - name: validate_authentication_otp_valid
+    tool: validate_authentication_otp
+    args:
+      code: "123456"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "success"
+        - path: "$.result.auth_status"
+          operator: equals
+          value: "Pass"
+
+  - name: validate_authentication_pin_valid
+    tool: validate_authentication_pin
+    args:
+      pin: "1234"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "success"
+        - path: "$.result.auth_status"
+          operator: equals
+          value: "Pass"
+
+  # ---------------------------------------------------------------------------
+  # Module 3: Billing & Payments Tools
+  # ---------------------------------------------------------------------------
+  - name: fetch_recent_bills_happy_path
     tool: fetch_recent_bills
     args:
       billing_account: "BA-4921"
@@ -38,8 +121,145 @@ tests:
           value: "success"
         - path: "$.result.current_balance"
           operator: is_not_null
+        - path: "$.result.due_date"
+          operator: is_not_null
 
-  - name: fetch_availability_slots_test
+  - name: process_bill_payment_happy_path
+    tool: process_bill_payment
+    args:
+      billing_account: "BA-4921"
+      amount: "75.00"
+      payment_method_id: "default"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "success"
+        - path: "$.result.payment_id"
+          operator: is_not_null
+
+  - name: configure_autopay_happy_path
+    tool: configure_autopay
+    args:
+      billing_account: "BA-4921"
+      payment_method: "card"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "success"
+        - path: "$.result.autopay_active"
+          operator: is_not_null
+
+  - name: create_dispute_ticket_within_limit
+    tool: create_dispute_ticket
+    args:
+      charge_id: "CHG-102"
+      reason: "Double charged"
+      notes: "Customer disputing $25.00 fee"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "success"
+        - path: "$.result.ticket_id"
+          operator: is_not_null
+
+  # ---------------------------------------------------------------------------
+  # Module 4: Tech Support & Virtual Repair Tools
+  # ---------------------------------------------------------------------------
+  - name: start_virtual_repair_happy_path
+    tool: start_virtual_repair
+    args:
+      cirn: "CRN-8849"
+      lob: "internet"
+      symptom: "no_internet_blinking_red"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "success"
+        - path: "$.result.session_id"
+          operator: is_not_null
+        - path: "$.result.recommended_action"
+          operator: is_not_null
+
+  - name: fetch_ticket_status_happy_path
+    tool: fetch_ticket_status
+    args:
+      ticket_id: "TCK-99214"
+      cirn: "CRN-8849"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "success"
+        - path: "$.result.ticket_state"
+          operator: is_not_null
+
+  # ---------------------------------------------------------------------------
+  # Module 5: Sales & Equipment Tools
+  # ---------------------------------------------------------------------------
+  - name: fetch_plan_catalog_happy_path
+    tool: fetch_plan_catalog
+    args:
+      lob: "internet"
+      customer_type: "Existing"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "success"
+        - path: "$.result.plans"
+          operator: is_not_null
+
+  - name: place_product_order_happy_path
+    tool: place_product_order
+    args:
+      plan_id: "plan_1g"
+      customer_id: "CRN-8849"
+      address: "123 Main St"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "success"
+        - path: "$.result.order_id"
+          operator: is_not_null
+
+  - name: submit_warranty_claim_happy_path
+    tool: submit_warranty_claim
+    args:
+      device_id: "DEV-8831"
+      defect_type: "defective"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "success"
+        - path: "$.result.claim_id"
+          operator: is_not_null
+
+  - name: initiate_number_transfer_missing_pin_edge
+    tool: initiate_number_transfer
+    args:
+      phone_number: "4155550199"
+      carrier_name: "OtherTelco"
+      account_number: "ACC-1122"
+      pin: ""
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "error"
+        - path: "$.result.agent_action"
+          operator: contains
+          value: "transfer PIN"
+
+  # ---------------------------------------------------------------------------
+  # Module 6: Appointments & Field Service Tools
+  # ---------------------------------------------------------------------------
+  - name: fetch_availability_slots_happy_path
     tool: fetch_availability_slots
     args:
       zip_code: "94043"
@@ -50,4 +270,93 @@ tests:
           operator: equals
           value: "success"
         - path: "$.result.slots"
+          operator: is_not_null
+
+  - name: commit_appointment_reschedule_happy_path
+    tool: commit_appointment_reschedule
+    args:
+      appt_id: "APT-55912"
+      new_slot: "Tomorrow 8:00 AM - 12:00 PM"
+      action: "reschedule"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "success"
+        - path: "$.result.confirmed"
+          operator: is_not_null
+
+  # ---------------------------------------------------------------------------
+  # Module 7: Account Security & Lifecycle Tools
+  # ---------------------------------------------------------------------------
+  - name: send_password_reset_sms_happy_path
+    tool: send_password_reset_sms
+    args:
+      cirn: "CRN-8849"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "success"
+        - path: "$.result.sent"
+          operator: is_not_null
+
+  - name: manage_mfa_settings_happy_path
+    tool: manage_mfa_settings
+    args:
+      action: "enable"
+      cirn: "CRN-8849"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "success"
+        - path: "$.result.mfa_active"
+          operator: is_not_null
+
+  - name: execute_suspend_restore_happy_path
+    tool: execute_suspend_restore
+    args:
+      action: "suspend"
+      reason: "lost_stolen"
+      cirn: "CRN-8849"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "success"
+        - path: "$.result.new_state"
+          operator: equals
+          value: "suspended"
+
+  - name: cancel_service_contract_happy_path
+    tool: cancel_service_contract
+    args:
+      billing_account: "BA-4921"
+      reason: "moving"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "success"
+        - path: "$.result.cancelled"
+          operator: is_not_null
+        - path: "$.result.confirmation_code"
+          operator: is_not_null
+
+  # ---------------------------------------------------------------------------
+  # Module 8: Live Agent Handover (Shared across all domains)
+  # ---------------------------------------------------------------------------
+  - name: execute_live_agent_handover_happy_path
+    tool: execute_live_agent_handover
+    args:
+      reason: "user_requested_agent"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "success"
+        - path: "$.result.queue"
+          operator: is_not_null
+        - path: "$.result.session_context_preserved"
           operator: is_not_null
