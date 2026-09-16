@@ -1,0 +1,10 @@
+{
+  "name": "configure_autopay",
+  "displayName": "configure_autopay",
+  "pythonFunction": {
+    "name": "configure_autopay",
+    "pythonCode": "tools/configure_autopay/python_function/python_code.py",
+    "description": "Enables or modifies recurring monthly autopay for the customer account."
+  },
+  "executionType": "SYNCHRONOUS"
+}

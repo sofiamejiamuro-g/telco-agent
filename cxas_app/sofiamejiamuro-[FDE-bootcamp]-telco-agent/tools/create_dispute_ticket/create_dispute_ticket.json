@@ -1,0 +1,10 @@
+{
+  "name": "create_dispute_ticket",
+  "displayName": "create_dispute_ticket",
+  "pythonFunction": {
+    "name": "create_dispute_ticket",
+    "pythonCode": "tools/create_dispute_ticket/python_function/python_code.py",
+    "description": "Creates a formal billing dispute ticket for unresolvable or high-value disputed charges."
+  },
+  "executionType": "SYNCHRONOUS"
+}

@@ -1,0 +1,28 @@
+# Compliance and Verbatim Strings Golden Evals
+common_session_parameters:
+  clid: "4155550142"
+  mock_mode: "True"
+
+conversations:
+  - conversation: greeting_and_recording_notice
+    session_parameters: {}
+    turns:
+      - user: "<event>welcome</event>"
+        agent: "Welcome to Telco. I can help with billing, technical support, or managing your account. To get started, could you tell me the phone number or account number associated with your service? This call may be recorded for quality and training purposes."
+
+  - conversation: business_account_deflection
+    session_parameters:
+      business_flag: "True"
+    turns:
+      - user: "I need help with my company's business line."
+        agent: "To get you the best support for your business account, I'll transfer you to an agent. You'll need to use your phone keypad instead of talking to the virtual assistant. Just a moment while I connect you."
+        tool_calls:
+          - action: execute_live_agent_handover
+
+  - conversation: explicit_human_escalation
+    session_parameters: {}
+    turns:
+      - user: "I want to talk to a person."
+        agent: "I'll connect you to a representative who can help. Please hold."
+        tool_calls:
+          - action: execute_live_agent_handover

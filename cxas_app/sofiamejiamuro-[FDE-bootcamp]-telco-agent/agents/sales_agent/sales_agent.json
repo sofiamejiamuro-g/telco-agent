@@ -1,0 +1,14 @@
+{
+  "name": "sales_agent",
+  "displayName": "sales_agent",
+  "instruction": "agents/sales_agent/instruction.txt",
+  "tools": [
+    "fetch_plan_catalog",
+    "place_product_order",
+    "submit_warranty_claim",
+    "initiate_number_transfer",
+    "execute_live_agent_handover",
+    "end_session"
+  ],
+  "childAgents": []
+}

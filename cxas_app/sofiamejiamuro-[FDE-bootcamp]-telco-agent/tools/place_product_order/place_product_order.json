@@ -1,0 +1,10 @@
+{
+  "name": "place_product_order",
+  "displayName": "place_product_order",
+  "pythonFunction": {
+    "name": "place_product_order",
+    "pythonCode": "tools/place_product_order/python_function/python_code.py",
+    "description": "Places an order for new service, plan upgrade, or replacement hardware, and sends an SMS receipt."
+  },
+  "executionType": "SYNCHRONOUS"
+}

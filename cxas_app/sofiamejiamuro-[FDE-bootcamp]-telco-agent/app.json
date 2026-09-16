@@ -1,0 +1,425 @@
+{
+  "name": "a2630043-2939-46be-93b2-daef4c7fd3e8",
+  "displayName": "sofiamejiamuro-[FDE-bootcamp]-telco-agent",
+  "description": "Telco Voice Central customer service voice agent resolving billing, technical support, sales, appointments, account management, and service changes.",
+  "rootAgent": "root_agent",
+  "tools": [
+    "fetch_customer_profile",
+    "send_authentication_otp",
+    "validate_authentication_otp",
+    "validate_authentication_pin",
+    "evaluate_routing_rules",
+    "fetch_recent_bills",
+    "create_dispute_ticket",
+    "process_bill_payment",
+    "configure_autopay",
+    "check_regional_outage",
+    "start_virtual_repair",
+    "fetch_availability_slots",
+    "commit_appointment_reschedule",
+    "fetch_ticket_status",
+    "fetch_plan_catalog",
+    "place_product_order",
+    "submit_warranty_claim",
+    "initiate_number_transfer",
+    "send_password_reset_sms",
+    "manage_mfa_settings",
+    "execute_suspend_restore",
+    "cancel_service_contract",
+    "execute_live_agent_handover",
+    "end_session"
+  ],
+  "modelSettings": {
+    "model": "gemini-3.5-flash"
+  },
+  "languageSettings": {
+    "defaultLanguageCode": "en-US",
+    "supportedLanguageCodes": [
+      "es-US"
+    ]
+  },
+  "timeZoneSettings": {
+    "timeZone": "America/Los_Angeles"
+  },
+  "audioProcessingConfig": {
+    "synthesizeSpeechConfigs": {
+      "en-US": {
+        "speakingRate": 1.0
+      },
+      "es-US": {
+        "speakingRate": 1.0
+      }
+    }
+  },
+  "loggingSettings": {
+    "conversationLoggingSettings": {
+      "retentionWindow": "31536000s"
+    }
+  },
+  "toolExecutionMode": "PARALLEL",
+  "evaluationMetricsThresholds": {
+    "goldenEvaluationMetricsThresholds": {
+      "turnLevelMetricsThresholds": {
+        "semanticSimilaritySuccessThreshold": 3,
+        "overallToolInvocationCorrectnessThreshold": 1
+      },
+      "toolMatchingSettings": {
+        "extraToolCallBehavior": "ALLOW"
+      }
+    },
+    "goldenHallucinationMetricBehavior": "DISABLED"
+  },
+  "variableDeclarations": [
+    {
+      "name": "clid",
+      "description": "10-digit caller ID from telephony.",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "tfn",
+      "description": "Toll-free dialed number driving brand routing.",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "cirn",
+      "description": "Customer reference number (redacted last 4).",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "billing_account",
+      "description": "Billing account number (redacted last 4).",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "customer_type",
+      "description": "Customer type: New or Existing.",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "user_id",
+      "description": "Internal CRM record ID.",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "auth_status",
+      "description": "Authentication status: Pass or Fail.",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "identification_status",
+      "description": "Identification status: Pass or Fail.",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "business_flag",
+      "description": "Flag indicating business account: True or False.",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "route",
+      "description": "Target capability module routing code.",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "lob",
+      "description": "Line of business: mobility, internet, tv, homephone, smarthome.",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "tv_sub_type",
+      "description": "TV service subtype: streaming, satellite, streaming_only.",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "region",
+      "description": "Geographic service region for outage checking.",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "language",
+      "description": "Locked conversation language: primary or secondary.",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "utterance",
+      "description": "Latest captured customer utterance.",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "dtmf_digits",
+      "description": "Captured DTMF digits keyed by the customer.",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "local_noinput_counter",
+      "description": "Consecutive no-input retry counter.",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "global_err_count",
+      "description": "Accumulated hard error count.",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "no_match_confirmation_count",
+      "description": "Consecutive no-match retry counter.",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "misc_counter",
+      "description": "Generic per-flow iteration counter.",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "mock_mode",
+      "description": "Synthetic test mode flag for deterministic evals.",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "mock_queue_closed",
+      "description": "Flag simulating closed queue after hours.",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "last_pmt_amt",
+      "description": "Amount of last recorded payment.",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "amount",
+      "description": "Currently discussed currency amount.",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "ban_type",
+      "description": "Billing account network classification.",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "is_prepaid",
+      "description": "Prepaid account flag.",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "loyalty_limit",
+      "description": "Maximum discretionary adjustment ceiling.",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "vr_task_count",
+      "description": "Virtual repair session step counter.",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "ticket_state",
+      "description": "Support ticket lifecycle state: open, in-progress, closed.",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "item_list",
+      "description": "Serialized customer equipment inventory.",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "intent_type",
+      "description": "Sub-intent classification tag.",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "api_resp",
+      "description": "Debug payload of last backend response.",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "sms_type",
+      "description": "SMS payload formatting type: Public or Private.",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "sms_content",
+      "description": "Text body of outgoing SMS notification.",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "day_val",
+      "description": "Day value for temporal scheduling.",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "date_val",
+      "description": "Date value for temporal scheduling.",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "month_val",
+      "description": "Month value for temporal scheduling.",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "end_time",
+      "description": "End timestamp of an appointment window.",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    },
+    {
+      "name": "flag_val",
+      "description": "Generic state flag variable.",
+      "schema": {
+        "type": "STRING",
+        "default": "",
+        "required": []
+      }
+    }
+  ]
+}

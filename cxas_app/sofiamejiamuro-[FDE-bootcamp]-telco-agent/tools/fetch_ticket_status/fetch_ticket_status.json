@@ -1,0 +1,10 @@
+{
+  "name": "fetch_ticket_status",
+  "displayName": "fetch_ticket_status",
+  "pythonFunction": {
+    "name": "fetch_ticket_status",
+    "pythonCode": "tools/fetch_ticket_status/python_function/python_code.py",
+    "description": "Checks status, notes, and ETA for an existing support ticket or scheduled technician visit."
+  },
+  "executionType": "SYNCHRONOUS"
+}

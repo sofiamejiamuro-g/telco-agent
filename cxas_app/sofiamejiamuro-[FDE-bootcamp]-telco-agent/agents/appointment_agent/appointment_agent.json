@@ -1,0 +1,13 @@
+{
+  "name": "appointment_agent",
+  "displayName": "appointment_agent",
+  "instruction": "agents/appointment_agent/instruction.txt",
+  "tools": [
+    "fetch_availability_slots",
+    "commit_appointment_reschedule",
+    "fetch_ticket_status",
+    "execute_live_agent_handover",
+    "end_session"
+  ],
+  "childAgents": []
+}

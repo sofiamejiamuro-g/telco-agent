@@ -1,0 +1,10 @@
+{
+  "name": "fetch_customer_profile",
+  "displayName": "fetch_customer_profile",
+  "pythonFunction": {
+    "name": "fetch_customer_profile",
+    "pythonCode": "tools/fetch_customer_profile/python_function/python_code.py",
+    "description": "Looks up customer account profile by caller ID (phone number). Returns customer reference number (cirn), account type, and prepaid flag."
+  },
+  "executionType": "SYNCHRONOUS"
+}

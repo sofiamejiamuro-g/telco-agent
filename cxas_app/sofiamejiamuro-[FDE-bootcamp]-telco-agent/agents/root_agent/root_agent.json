@@ -1,0 +1,21 @@
+{
+  "name": "root_agent",
+  "displayName": "root_agent",
+  "instruction": "agents/root_agent/instruction.txt",
+  "tools": [
+    "fetch_customer_profile",
+    "evaluate_routing_rules",
+    "check_regional_outage",
+    "execute_live_agent_handover",
+    "end_session"
+  ],
+  "childAgents": [
+    "auth_agent",
+    "billing_agent",
+    "tech_support_agent",
+    "sales_agent",
+    "appointment_agent",
+    "account_agent",
+    "secondary_language_agent"
+  ]
+}

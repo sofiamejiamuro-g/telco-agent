@@ -1,0 +1,10 @@
+{
+  "name": "submit_warranty_claim",
+  "displayName": "submit_warranty_claim",
+  "pythonFunction": {
+    "name": "submit_warranty_claim",
+    "pythonCode": "tools/submit_warranty_claim/python_function/python_code.py",
+    "description": "Files a hardware warranty claim for defective, damaged, or malfunctioning customer devices."
+  },
+  "executionType": "SYNCHRONOUS"
+}

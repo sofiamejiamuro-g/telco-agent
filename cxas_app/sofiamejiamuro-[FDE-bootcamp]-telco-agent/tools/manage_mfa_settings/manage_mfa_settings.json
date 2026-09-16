@@ -1,0 +1,10 @@
+{
+  "name": "manage_mfa_settings",
+  "displayName": "manage_mfa_settings",
+  "pythonFunction": {
+    "name": "manage_mfa_settings",
+    "pythonCode": "tools/manage_mfa_settings/python_function/python_code.py",
+    "description": "Enables or disables multi-factor authentication (MFA) on the customer's portal account."
+  },
+  "executionType": "SYNCHRONOUS"
+}

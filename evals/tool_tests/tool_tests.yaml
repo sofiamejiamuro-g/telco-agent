@@ -1,0 +1,53 @@
+# Tool Contract Verification Tests
+tests:
+  - name: fetch_customer_profile_success
+    tool: fetch_customer_profile
+    args:
+      clid: "4155550142"
+    variables:
+      mock_mode: "True"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "success"
+        - path: "$.result.cirn"
+          operator: is_not_null
+
+  - name: check_regional_outage_test
+    tool: check_regional_outage
+    args:
+      region: "Region-A"
+      lob: "internet"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "success"
+        - path: "$.result.active"
+          operator: is_not_null
+
+  - name: fetch_recent_bills_test
+    tool: fetch_recent_bills
+    args:
+      billing_account: "BA-4921"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "success"
+        - path: "$.result.current_balance"
+          operator: is_not_null
+
+  - name: fetch_availability_slots_test
+    tool: fetch_availability_slots
+    args:
+      zip_code: "94043"
+      service_type: "repair"
+    expectations:
+      response:
+        - path: "$.result.status"
+          operator: equals
+          value: "success"
+        - path: "$.result.slots"
+          operator: is_not_null

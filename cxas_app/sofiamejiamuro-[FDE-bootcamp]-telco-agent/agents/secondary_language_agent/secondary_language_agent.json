@@ -1,0 +1,12 @@
+{
+  "name": "secondary_language_agent",
+  "displayName": "secondary_language_agent",
+  "instruction": "agents/secondary_language_agent/instruction.txt",
+  "tools": [
+    "check_regional_outage",
+    "start_virtual_repair",
+    "execute_live_agent_handover",
+    "end_session"
+  ],
+  "childAgents": []
+}

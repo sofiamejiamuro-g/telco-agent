@@ -1,0 +1,10 @@
+{
+  "name": "initiate_number_transfer",
+  "displayName": "initiate_number_transfer",
+  "pythonFunction": {
+    "name": "initiate_number_transfer",
+    "pythonCode": "tools/initiate_number_transfer/python_function/python_code.py",
+    "description": "Initiates incoming mobile number port-in from a competing carrier."
+  },
+  "executionType": "SYNCHRONOUS"
+}

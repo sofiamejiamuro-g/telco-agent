@@ -1,0 +1,10 @@
+{
+  "name": "process_bill_payment",
+  "displayName": "process_bill_payment",
+  "pythonFunction": {
+    "name": "process_bill_payment",
+    "pythonCode": "tools/process_bill_payment/python_function/python_code.py",
+    "description": "Processes a bill payment for an account balance using stored or newly provided payment details."
+  },
+  "executionType": "SYNCHRONOUS"
+}

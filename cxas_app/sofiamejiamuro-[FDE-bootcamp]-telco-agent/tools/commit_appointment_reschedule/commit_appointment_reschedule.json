@@ -1,0 +1,10 @@
+{
+  "name": "commit_appointment_reschedule",
+  "displayName": "commit_appointment_reschedule",
+  "pythonFunction": {
+    "name": "commit_appointment_reschedule",
+    "pythonCode": "tools/commit_appointment_reschedule/python_function/python_code.py",
+    "description": "Books, reschedules, or cancels a technician appointment and dispatches an SMS confirmation."
+  },
+  "executionType": "SYNCHRONOUS"
+}

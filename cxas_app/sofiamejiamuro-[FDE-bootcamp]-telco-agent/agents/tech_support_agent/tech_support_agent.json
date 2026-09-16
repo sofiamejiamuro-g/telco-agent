@@ -1,0 +1,13 @@
+{
+  "name": "tech_support_agent",
+  "displayName": "tech_support_agent",
+  "instruction": "agents/tech_support_agent/instruction.txt",
+  "tools": [
+    "check_regional_outage",
+    "start_virtual_repair",
+    "fetch_ticket_status",
+    "execute_live_agent_handover",
+    "end_session"
+  ],
+  "childAgents": []
+}

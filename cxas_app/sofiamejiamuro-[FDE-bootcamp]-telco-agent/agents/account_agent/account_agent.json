@@ -1,0 +1,14 @@
+{
+  "name": "account_agent",
+  "displayName": "account_agent",
+  "instruction": "agents/account_agent/instruction.txt",
+  "tools": [
+    "send_password_reset_sms",
+    "manage_mfa_settings",
+    "execute_suspend_restore",
+    "cancel_service_contract",
+    "execute_live_agent_handover",
+    "end_session"
+  ],
+  "childAgents": []
+}

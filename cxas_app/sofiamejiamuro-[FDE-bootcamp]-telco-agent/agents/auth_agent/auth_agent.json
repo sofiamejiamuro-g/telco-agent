@@ -1,0 +1,13 @@
+{
+  "name": "auth_agent",
+  "displayName": "auth_agent",
+  "instruction": "agents/auth_agent/instruction.txt",
+  "tools": [
+    "send_authentication_otp",
+    "validate_authentication_otp",
+    "validate_authentication_pin",
+    "execute_live_agent_handover",
+    "end_session"
+  ],
+  "childAgents": []
+}

@@ -1,0 +1,10 @@
+{
+  "name": "start_virtual_repair",
+  "displayName": "start_virtual_repair",
+  "pythonFunction": {
+    "name": "start_virtual_repair",
+    "pythonCode": "tools/start_virtual_repair/python_function/python_code.py",
+    "description": "Starts an automated diagnostic session for customer equipment (router, TV box, ONT) and runs line tests."
+  },
+  "executionType": "SYNCHRONOUS"
+}

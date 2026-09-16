@@ -1,0 +1,10 @@
+{
+  "name": "send_authentication_otp",
+  "displayName": "send_authentication_otp",
+  "pythonFunction": {
+    "name": "send_authentication_otp",
+    "pythonCode": "tools/send_authentication_otp/python_function/python_code.py",
+    "description": "Sends a 6-digit one-time passcode (OTP) to the customer's verified mobile phone number for authentication."
+  },
+  "executionType": "SYNCHRONOUS"
+}

@@ -1,0 +1,10 @@
+{
+  "name": "cancel_service_contract",
+  "displayName": "cancel_service_contract",
+  "pythonFunction": {
+    "name": "cancel_service_contract",
+    "pythonCode": "tools/cancel_service_contract/python_function/python_code.py",
+    "description": "Processes line cancellation or port-out contract termination after verbatim fee disclosure is read."
+  },
+  "executionType": "SYNCHRONOUS"
+}

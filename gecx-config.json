@@ -3,7 +3,7 @@
   "location": "us",
   "app_name": "sofiamejiamuro-[FDE-bootcamp]-telco-agent",
   "deployed_app_id": "a2630043-2939-46be-93b2-daef4c7fd3e8",
-  "app_dir": "cxas_app/",
+  "app_dir": "cxas_app/sofiamejiamuro-[FDE-bootcamp]-telco-agent/",
   "model": "gemini-3.5-flash",
   "modality": "audio",
   "default_channel": "audio",
